@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ConcertsService } from './concerts.service';
 import { CreateConcertDto } from './dto/concert.dto';
@@ -17,29 +18,35 @@ import { IsAdminGuard } from 'src/common/guards/isAdmin.guard';
 export class ConcertsController {
   constructor(private readonly concertsService: ConcertsService) {}
 
+  @ApiOperation({ summary: '공연 검색하기(이름, 카테고리)' })
+  @Get('search/:keyword')
+  search(@Param('keyword') keyword: string) {
+    return this.concertsService.search(keyword);
+  }
+
   @ApiOperation({ summary: '새 공연 등록' })
   @Post()
   @UseGuards(JwtAuthGuard)
   // IsAdminGuard
-  create(@Body() createConcertDto: CreateConcertDto) {
-    return this.concertsService.create(createConcertDto);
+  async create(@Body() createConcertDto: CreateConcertDto) {
+    return await this.concertsService.create(createConcertDto);
   }
 
   @ApiOperation({ summary: '공연 목록 보기' })
   @Get()
-  findAll() {
-    return this.concertsService.findAll();
+  async findAll() {
+    return await this.concertsService.findAll();
   }
 
   @ApiOperation({ summary: '공연 목록 제목만 보기' })
   @Get('name')
-  findAllOnlyName() {
-    return this.concertsService.findAllOnlyName();
+  async findAllOnlyName() {
+    return await this.concertsService.findAllOnlyName();
   }
 
   @ApiOperation({ summary: '공연 상세보기' })
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.concertsService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.concertsService.findOne(id);
   }
 }

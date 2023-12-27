@@ -27,4 +27,12 @@ export class ConcertsService {
     }
     return concert;
   }
+
+  async search(keyword: string) {
+    const results = await this.concertsRepository.search(keyword);
+    if (results.length === 0) {
+      return '검색 결과가 존재하지 않습니다.';
+    }
+    return results;
+  }
 }

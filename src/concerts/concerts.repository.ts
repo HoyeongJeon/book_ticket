@@ -77,4 +77,12 @@ export class ConcertsRepository {
       ])
       .getOne();
   }
+
+  async search(keyword: string) {
+    return await this.concertsRepository
+      .createQueryBuilder('concert')
+      .where('concert.title LIKE :keyword', { keyword: `%${keyword}%` })
+      .orWhere('concert.category LIKE :keyword', { keyword: `%${keyword}%` })
+      .getMany();
+  }
 }
