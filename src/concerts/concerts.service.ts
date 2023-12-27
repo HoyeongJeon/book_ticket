@@ -1,26 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { CreateConcertDto } from './dto/create-concert.dto';
-import { UpdateConcertDto } from './dto/update-concert.dto';
+import { CreateConcertDto } from './dto/concert.dto';
+import { ConcertsRepository } from './concerts.repository';
 
 @Injectable()
 export class ConcertsService {
-  create(createConcertDto: CreateConcertDto) {
-    return 'This action adds a new concert';
+  constructor(private readonly concertsRepository: ConcertsRepository) {}
+  async create(createConcertDto: CreateConcertDto) {
+    const concert = await this.concertsRepository.create(createConcertDto);
+    return concert;
   }
 
-  findAll() {
-    return `This action returns all concerts`;
+  async findAll() {
+    const concerts = await this.concertsRepository.findAll();
+    return concerts;
   }
 
   findOne(id: number) {
     return `This action returns a #${id} concert`;
-  }
-
-  update(id: number, updateConcertDto: UpdateConcertDto) {
-    return `This action updates a #${id} concert`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} concert`;
   }
 }

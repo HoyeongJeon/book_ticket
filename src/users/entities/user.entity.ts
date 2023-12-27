@@ -49,6 +49,12 @@ export class User extends BaseModel {
   @Column({ type: 'varchar', nullable: false })
   password: string;
 
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  isAdmin: boolean;
+
   @OneToOne(() => Profile, (profile) => profile.user, {
     eager: true,
     cascade: true,
