@@ -10,6 +10,7 @@ import { ConcertsRepository } from './concerts.repository';
 import { Dates } from './entities/dates.entity';
 
 @Module({
+  exports: [ConcertsService, ConcertsRepository],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,

@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty } from 'class-validator';
+import { IsDate, IsNotEmpty, IsNumber } from 'class-validator';
 import { BaseModel } from 'src/common/entities/base.entity';
 import { Concert } from 'src/concerts/entities/concert.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
@@ -9,6 +9,13 @@ export class Dates extends BaseModel {
   @IsNotEmpty()
   @Column()
   date: Date;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Column({
+    default: 10000,
+  })
+  seats: number;
 
   @ManyToOne(() => Concert, (concert) => concert.dates)
   concert: Concert;

@@ -6,7 +6,6 @@ import {
   Param,
   ParseIntPipe,
   UseGuards,
-  Query,
 } from '@nestjs/common';
 import { ConcertsService } from './concerts.service';
 import { CreateConcertDto } from './dto/concert.dto';

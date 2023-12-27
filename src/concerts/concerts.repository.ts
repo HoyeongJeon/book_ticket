@@ -30,7 +30,6 @@ export class ConcertsRepository {
         location: createConcertDto.location,
         img_url: createConcertDto.img_url,
         is_booking_open: createConcertDto.is_booking_open,
-        seats: createConcertDto.seats,
         category: createConcertDto.category,
       });
       const savedConcert = await this.concertsRepository.save(concert);
@@ -38,6 +37,7 @@ export class ConcertsRepository {
       const concertSchedule = dateDtos.map((dateDto) => {
         return this.datesRepository.create({
           date: new Date(dateDto as any),
+          seats: createConcertDto.seats ? createConcertDto.seats : 10000,
           concert: savedConcert,
         });
       });
@@ -71,9 +71,9 @@ export class ConcertsRepository {
         'concert.description',
         'concert.location',
         'concert.price',
-        'concert.seats',
         'concert.is_booking_open',
         'dates.date',
+        'dates.seats',
       ])
       .getOne();
   }
@@ -84,5 +84,13 @@ export class ConcertsRepository {
       .where('concert.title LIKE :keyword', { keyword: `%${keyword}%` })
       .orWhere('concert.category LIKE :keyword', { keyword: `%${keyword}%` })
       .getMany();
+  }
+
+  async save(concert: Concert) {
+    return await this.concertsRepository.save(concert);
+  }
+
+  async update(id: number, concert: Concert) {
+    return await this.concertsRepository.update(id, concert);
   }
 }

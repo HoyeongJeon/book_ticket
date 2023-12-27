@@ -4,9 +4,9 @@ import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
-import { Profile } from './entities/profile.entity';
 import { UsersReposiory } from './users.repository';
 import { AuthModule } from 'src/auth/auth.module';
+import { BooksModule } from 'src/books/books.module';
 
 @Module({
   exports: [UsersReposiory],
@@ -14,8 +14,9 @@ import { AuthModule } from 'src/auth/auth.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forFeature([User, Profile]),
+    TypeOrmModule.forFeature([User]),
     forwardRef(() => AuthModule),
+    forwardRef(() => BooksModule),
   ],
   controllers: [UsersController],
   providers: [UsersService, UsersReposiory],

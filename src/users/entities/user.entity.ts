@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { BaseModel } from 'src/common/entities/base.entity';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
-import { Profile } from './profile.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { Book } from 'src/books/entities/book.entity';
 
 @Entity()
 export class User extends BaseModel {
@@ -50,15 +50,16 @@ export class User extends BaseModel {
   password: string;
 
   @Column({
+    default: 1000000,
+  })
+  wallet: number;
+
+  @Column({
     type: 'boolean',
     default: false,
   })
   isAdmin: boolean;
 
-  @OneToOne(() => Profile, (profile) => profile.user, {
-    eager: true,
-    cascade: true,
-  })
-  @JoinColumn()
-  profile: Profile;
+  @OneToMany(() => Book, (book) => book.user) // note: 테이블의 관계를 설정하는 부분
+  books: Book[];
 }

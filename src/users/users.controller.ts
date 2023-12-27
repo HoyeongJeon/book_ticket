@@ -4,12 +4,14 @@ import { LoginUserDto, SignUpUserDto } from './dto/user.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { Request } from 'express';
+import { BooksService } from 'src/books/books.service';
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly authService: AuthService,
+    private readonly bookService: BooksService,
   ) {}
 
   @Post('signup')
@@ -25,6 +27,11 @@ export class UsersController {
   @Get('my-profile')
   @UseGuards(JwtAuthGuard)
   async myProfile(@Req() req: Request) {
-    return req.user;
+    const myBooks = await this.bookService.myBooks(req.user['id']);
+    const user = {
+      ...req.user,
+      myBooks,
+    };
+    return user;
   }
 }

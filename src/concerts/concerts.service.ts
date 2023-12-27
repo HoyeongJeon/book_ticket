@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateConcertDto } from './dto/concert.dto';
 import { ConcertsRepository } from './concerts.repository';
+import { Concert } from './entities/concert.entity';
 
 @Injectable()
 export class ConcertsService {
@@ -34,5 +35,14 @@ export class ConcertsService {
       return '검색 결과가 존재하지 않습니다.';
     }
     return results;
+  }
+
+  async update(id: number, concert: Concert) {
+    const existingConcert = await this.concertsRepository.findOne(id);
+    if (!existingConcert) {
+      throw new BadRequestException('존재하지 않는 공연입니다.');
+    }
+    const updatedConcert = await this.concertsRepository.update(id, concert);
+    return updatedConcert;
   }
 }

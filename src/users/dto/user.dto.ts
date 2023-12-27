@@ -5,7 +5,6 @@ export class SignUpUserDto extends OmitType(User, [
   'id',
   'createdAt',
   'updatedAt',
-  'profile',
 ] as const) {}
 
 export class LoginUserDto extends PickType(User, [
