@@ -28,14 +28,18 @@ export class ConcertsController {
   @ApiOperation({ summary: '공연 목록 보기' })
   @Get()
   findAll() {
-    // return 'Get all Concerts';
     return this.concertsService.findAll();
+  }
+
+  @ApiOperation({ summary: '공연 목록 제목만 보기' })
+  @Get('name')
+  findAllOnlyName() {
+    return this.concertsService.findAllOnlyName();
   }
 
   @ApiOperation({ summary: '공연 상세보기' })
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return 'Get Detailed Concert';
     return this.concertsService.findOne(id);
   }
 }

@@ -41,7 +41,7 @@ export class Concert extends BaseModel {
   seats: number;
 
   @OneToMany(() => Dates, (date) => date.concert, {
-    eager: true,
+    // eager: true,
     cascade: true,
     onDelete: 'CASCADE',
   })
@@ -52,10 +52,4 @@ export class Concert extends BaseModel {
   @IsNotEmpty()
   @Column()
   category: string;
-  // @ManyToMany(() => Category, (category) => category.concerts, {
-  //   eager: true,
-  //   cascade: true,
-  // })
-  // @JoinTable()
-  // category: Category[];
 }

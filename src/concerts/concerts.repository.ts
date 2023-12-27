@@ -52,8 +52,29 @@ export class ConcertsRepository {
   }
 
   async findAll() {
+    return await this.concertsRepository.find();
+  }
+
+  async findAllOnlyName() {
     return await this.concertsRepository.find({
-      relations: ['dates'],
+      select: ['title'],
     });
+  }
+  async findOne(id: number) {
+    return await this.concertsRepository
+      .createQueryBuilder('concert')
+      .leftJoin('concert.dates', 'dates')
+      .where('concert.id = dates.concertId', { id })
+      .select([
+        'concert.title',
+        'concert.img_url',
+        'concert.description',
+        'concert.location',
+        'concert.price',
+        'concert.seats',
+        'concert.is_booking_open',
+        'dates.date',
+      ])
+      .getOne();
   }
 }
