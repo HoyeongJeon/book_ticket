@@ -10,8 +10,8 @@ import {
 import { ConcertsService } from './concerts.service';
 import { CreateConcertDto } from './dto/concert.dto';
 import { ApiOperation } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { IsAdminGuard } from 'src/common/guards/isAdmin.guard';
+import { AccessTokenGuard } from 'src/auth/guard/LoggedIn.guard';
 
 @Controller('concerts')
 export class ConcertsController {
@@ -25,9 +25,10 @@ export class ConcertsController {
 
   @ApiOperation({ summary: '새 공연 등록' })
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessTokenGuard)
   // IsAdminGuard
   async create(@Body() createConcertDto: CreateConcertDto) {
+    console.log('hello');
     return await this.concertsService.create(createConcertDto);
   }
 

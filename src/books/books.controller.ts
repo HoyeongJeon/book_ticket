@@ -8,17 +8,17 @@ import {
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { ApiOperation } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { LoggedInUser } from 'src/common/decorators/user.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { ParseDatePipe } from './pipes/date.pipe';
+import { AccessTokenGuard } from 'src/auth/guard/LoggedIn.guard';
 
 @Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @ApiOperation({ summary: '공연을 예약합니다.' })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessTokenGuard)
   @Post(':concertId')
   book(
     @Param('concertId', ParseIntPipe) concertId: number,

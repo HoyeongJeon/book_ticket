@@ -43,6 +43,7 @@ export class ConcertsRepository {
       });
       await this.datesRepository.save(concertSchedule);
       await queryRunner.commitTransaction();
+      return concertSchedule;
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;

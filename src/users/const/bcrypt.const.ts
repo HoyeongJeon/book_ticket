@@ -1,1 +1,1 @@
-export const PASSWORD_HASH_SALT = Number(process.env.PASSWORD_HASH_SALT);
+export const PASSWORD_HASH_ROUND = parseInt(process.env.PASSWORD_HASH_ROUND);
