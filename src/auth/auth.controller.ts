@@ -7,7 +7,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('token/access')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(RefreshTokenGuard)
   async postAccessToken(@Headers('Authorization') rawToken: string) {
     const token = this.authService.getTokenFromHeader(rawToken);
     const accessToken = this.authService.rotateToken(token, false);
