@@ -1,9 +1,11 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { LoginUserDto, SignUpUserDto } from './dto/user.dto';
 import { AuthService } from 'src/auth/auth.service';
-import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { Request } from 'express';
 import { BooksService } from 'src/books/books.service';
+import { AccessTokenGuard } from 'src/auth/guard/LoggedIn.guard';
+import { LoggedInUser } from 'src/common/decorators/user.decorator';
+import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -23,9 +25,9 @@ export class UsersController {
   }
 
   @Get('my-profile')
-  @UseGuards(JwtAuthGuard)
-  async myProfile(@Req() req: Request) {
-    const myBooks = await this.bookService.myBooks(req.user['id']);
+  @UseGuards(AccessTokenGuard)
+  async myProfile(@Req() req: Request, @LoggedInUser() loggedInUser: User) {
+    const myBooks = await this.bookService.myBooks(loggedInUser.id);
     const user = {
       ...req.user,
       myBooks,

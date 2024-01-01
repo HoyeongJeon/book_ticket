@@ -8,7 +8,6 @@ import { UsersRepository } from 'src/users/users.repository';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/entities/user.entity';
-import { JWT_SECRET } from './const/jwt.const';
 import { PASSWORD_HASH_ROUND } from 'src/users/const/bcrypt.const';
 
 @Injectable()
@@ -17,6 +16,44 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly usersRepository: UsersRepository,
   ) {}
+
+  // header에서 토큰 받기
+  // Bearer {token}
+  getTokenFromHeader(header: string) {
+    const [type, token] = header.split(' ');
+    // 토큰 길이가 2를 넘으면, 잘못 들어온것, 토큰 타입 체크
+    if (header.split(' ').length !== 2 || type !== 'Bearer') {
+      throw new UnauthorizedException('잘못된 토큰입니다.');
+    }
+    return token;
+  }
+
+  // 토큰 검증
+  async verifyToken(token: string) {
+    return await this.jwtService.verify(token, {
+      secret: process.env.SECRET_KEY,
+    });
+  }
+
+  // 토큰 재발급
+  rotateToken(token: string, isRefreshToken: boolean) {
+    const payload = this.jwtService.verify(token, {
+      secret: process.env.SECRET_KEY,
+    });
+
+    if (payload.type !== 'refresh') {
+      throw new UnauthorizedException(
+        '토큰 재발급은 refresh token으로만 가능합니다.',
+      );
+    }
+    return this.signToken(
+      {
+        ...payload,
+      },
+      isRefreshToken,
+    );
+  }
+
   async jwtLogin(loginUserDto: LoginUserDto) {
     const user = await this.usersRepository.findUserByEmail(loginUserDto.email);
     if (!user) {
@@ -44,8 +81,8 @@ export class AuthService {
     };
 
     return this.jwtService.sign(payload, {
-      secret: JWT_SECRET,
-      expiresIn: isRefreshToken ? '3600' : '600',
+      secret: process.env.SECRET_KEY,
+      expiresIn: isRefreshToken ? 3600 : 600,
     });
   }
 

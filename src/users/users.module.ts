@@ -9,7 +9,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { BooksModule } from 'src/books/books.module';
 
 @Module({
-  exports: [UsersRepository],
+  exports: [UsersRepository, UsersService],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
