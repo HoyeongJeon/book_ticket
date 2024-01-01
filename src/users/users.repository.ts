@@ -4,7 +4,7 @@ import { User } from './entities/user.entity';
 import { SignUpUserDto } from './dto/user.dto';
 
 @Injectable()
-export class UsersReposiory {
+export class UsersRepository {
   private usersRepository: Repository<User>;
   constructor(private readonly dataSource: DataSource) {
     this.usersRepository = this.dataSource.getRepository(User);

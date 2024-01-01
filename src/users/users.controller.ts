@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { UsersService } from './users.service';
 import { LoginUserDto, SignUpUserDto } from './dto/user.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
@@ -9,19 +8,18 @@ import { BooksService } from 'src/books/books.service';
 @Controller('users')
 export class UsersController {
   constructor(
-    private readonly usersService: UsersService,
     private readonly authService: AuthService,
     private readonly bookService: BooksService,
   ) {}
 
   @Post('signup')
   async signup(@Body() signUpUserDto: SignUpUserDto) {
-    return await this.usersService.signup(signUpUserDto);
+    return await this.authService.signup(signUpUserDto);
   }
 
   @Post('login')
   async login(@Body() loginUserDto: LoginUserDto) {
-    return await this.authService.jwtLogin(loginUserDto);
+    return await this.authService.login(loginUserDto);
   }
 
   @Get('my-profile')
