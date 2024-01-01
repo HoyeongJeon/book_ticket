@@ -7,6 +7,7 @@ import { BooksRepository } from './books.repository';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Book } from './entities/book.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   exports: [BooksService],
@@ -17,6 +18,7 @@ import { Book } from './entities/book.entity';
     TypeOrmModule.forFeature([Book]),
     ConcertsModule,
     forwardRef(() => UsersModule),
+    AuthModule,
   ],
   controllers: [BooksController],
   providers: [BooksService, BooksRepository],
