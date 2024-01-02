@@ -140,4 +140,14 @@ export class ConcertsRepository {
   async update(id: number, concert: Concert) {
     return await this.concertsRepository.update(id, concert);
   }
+
+  async findOneAndTickets(id: number) {
+    const tickets = await this.seatsRepository.find({
+      where: {
+        concertId: id,
+      },
+      select: ['seatNumber', 'grade', 'isBooked'],
+    });
+    return tickets;
+  }
 }

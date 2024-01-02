@@ -6,19 +6,23 @@ import { Seat } from './seat.entity';
 
 @Entity()
 export class Dates extends BaseModel {
+  // 공연 날짜 및 시간
   @IsDate()
   @IsNotEmpty()
   @Column()
   date: Date;
 
+  // 공연
   @ManyToOne(() => Concert, (concert) => concert.dates)
   concert: Concert;
 
+  // S좌석 몇개인지
   @IsNumber()
   @IsNotEmpty()
   @Column()
   S: number;
 
+  // S좌석 가격
   @IsNumber()
   @IsNotEmpty()
   @Column()
@@ -44,6 +48,7 @@ export class Dates extends BaseModel {
   @Column()
   priceA: number;
 
+  // 좌석
   @OneToMany(() => Seat, (seat) => seat.dates)
   seats: Seat[];
 }
