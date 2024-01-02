@@ -18,11 +18,14 @@ export class BooksRepository {
     concertId: number,
     date: Date,
     userInfo: { userId: number; wallet: number },
+    grade: string,
   ) {
+    // transaction 적용해야함
     const book = this.booksRepository.create({
       user: { id: userInfo.userId },
       concert: { id: concertId },
       date,
+      grade,
     });
     const savedBook = await this.booksRepository.save(book);
     const concert = await this.concertsRepository.findOne({
@@ -33,12 +36,13 @@ export class BooksRepository {
     // 좌석 업데이트
     for (let i = 0; i < concert.dates.length; i++) {
       if (JSON.stringify(concert.dates[i].date) === JSON.stringify(date)) {
-        concert.dates[i].seats -= 1;
+        console.log(concert.dates[i][grade]);
+        concert.dates[i][grade] -= 1;
         await this.dataSource
           .createQueryBuilder()
           .update(Dates)
           .set({
-            seats: concert.dates[i].seats,
+            [grade]: concert.dates[i][grade],
           })
           .where('id = :id', {
             id: concert.dates[i].id,
@@ -49,7 +53,7 @@ export class BooksRepository {
       }
     }
     // 내 돈도 빠져야함
-    userInfo.wallet -= concert.price;
+    userInfo.wallet -= concert.dates[0][`price${grade}`];
     await this.dataSource
       .createQueryBuilder()
       .update(User)
@@ -70,7 +74,6 @@ export class BooksRepository {
       .where('book.userId = :userId', { userId })
       .getMany();
 
-    console.log(myBooks);
     return myBooks;
   }
 }

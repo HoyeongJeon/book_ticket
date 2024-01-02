@@ -28,7 +28,6 @@ export class ConcertsController {
   @UseGuards(AccessTokenGuard)
   // IsAdminGuard
   async create(@Body() createConcertDto: CreateConcertDto) {
-    console.log('hello');
     return await this.concertsService.create(createConcertDto);
   }
 

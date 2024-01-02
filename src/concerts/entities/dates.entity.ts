@@ -10,13 +10,36 @@ export class Dates extends BaseModel {
   @Column()
   date: Date;
 
-  @IsNotEmpty()
-  @IsNumber()
-  @Column({
-    default: 10000,
-  })
-  seats: number;
-
   @ManyToOne(() => Concert, (concert) => concert.dates)
   concert: Concert;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @Column()
+  S: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @Column()
+  priceS: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @Column()
+  B: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @Column()
+  priceB: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @Column()
+  A: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @Column()
+  priceA: number;
 }

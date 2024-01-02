@@ -14,4 +14,7 @@ export class Book extends BaseModel {
 
   @Column()
   date: Date;
+
+  @Column()
+  grade: string;
 }

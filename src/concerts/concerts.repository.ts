@@ -15,6 +15,7 @@ export class ConcertsRepository {
     this.categoryRepository = this.dataSource.getRepository(Category);
     this.datesRepository = this.dataSource.getRepository(Dates);
   }
+
   async create(createConcertDto: CreateConcertDto) {
     const dateDtos = createConcertDto.dates;
 
@@ -37,7 +38,12 @@ export class ConcertsRepository {
       const concertSchedule = dateDtos.map((dateDto) => {
         return this.datesRepository.create({
           date: new Date(dateDto as any),
-          seats: createConcertDto.seats ? createConcertDto.seats : 10000,
+          S: createConcertDto.S,
+          priceS: createConcertDto.priceS,
+          A: createConcertDto.A,
+          priceA: createConcertDto.priceA,
+          B: createConcertDto.B,
+          priceB: createConcertDto.priceB,
           concert: savedConcert,
         });
       });
@@ -74,7 +80,12 @@ export class ConcertsRepository {
         'concert.price',
         'concert.is_booking_open',
         'dates.date',
-        'dates.seats',
+        'dates.S',
+        'dates.priceS',
+        'dates.A',
+        'dates.priceA',
+        'dates.B',
+        'dates.priceB',
       ])
       .getOne();
   }

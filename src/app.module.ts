@@ -27,7 +27,7 @@ import { Book } from './books/entities/book.entity';
       username: process.env.MYSQL_USERNAME,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
-      entities: [User, Concert, Category, Seat, Dates, Book],
+      autoLoadEntities: true,
       synchronize: true,
     }),
 
