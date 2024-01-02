@@ -13,6 +13,7 @@ export class BooksService {
     date: Date,
     userInfo: { userId: number; wallet: number },
     grade: string,
+    seatNumber: number,
   ) {
     const concert = await this.concertsService.findOne(concertId);
 
@@ -32,9 +33,9 @@ export class BooksService {
           return '해당 등급의 예약 가능한 자리가 없습니다.';
         }
 
+        // const price = concert.dates[i][grade].price;
         const price = concert.dates[i][`price${grade}`];
 
-        console.log(price);
         // 가격이랑 내가 갖고있는 돈 비교
         if (price > userInfo.wallet) {
           return '잔액이 부족합니다.';
@@ -44,6 +45,7 @@ export class BooksService {
             date,
             userInfo,
             grade,
+            seatNumber,
           );
           return book;
         }

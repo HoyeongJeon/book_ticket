@@ -1,7 +1,8 @@
 import { IsDate, IsNotEmpty, IsNumber } from 'class-validator';
 import { BaseModel } from 'src/common/entities/base.entity';
 import { Concert } from 'src/concerts/entities/concert.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Seat } from './seat.entity';
 
 @Entity()
 export class Dates extends BaseModel {
@@ -42,4 +43,7 @@ export class Dates extends BaseModel {
   @IsNotEmpty()
   @Column()
   priceA: number;
+
+  @OneToMany(() => Seat, (seat) => seat.dates)
+  seats: Seat[];
 }

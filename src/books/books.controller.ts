@@ -24,6 +24,7 @@ export class BooksController {
     @Param('concertId', ParseIntPipe) concertId: number,
     @Body('date', ParseDatePipe) date: Date,
     @Body('grade') grade: string,
+    @Body('seatNumber') seatNumber: number,
     @LoggedInUser() user: User,
   ) {
     const { id: userId, wallet } = user;
@@ -31,7 +32,7 @@ export class BooksController {
       userId,
       wallet,
     };
-    return this.booksService.book(concertId, date, userInfo, grade);
+    return this.booksService.book(concertId, date, userInfo, grade, seatNumber);
   }
 }
 

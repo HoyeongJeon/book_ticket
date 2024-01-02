@@ -17,11 +17,6 @@ export class Concert extends BaseModel {
   description: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  @Column()
-  price: number;
-
-  @IsNotEmpty()
   @IsString()
   @Column()
   location: string;
