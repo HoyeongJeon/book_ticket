@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Concert } from './entities/concert.entity';
 import { CreateConcertDto } from './dto/concert.dto';
-import { Category } from './entities/category.entity';
 import { Dates } from './entities/dates.entity';
 import { Seat } from './entities/seat.entity';
 
@@ -17,7 +16,7 @@ export class ConcertsRepository {
     this.seatsRepository = this.dataSource.getRepository(Seat);
   }
 
-  async create(createConcertDto: CreateConcertDto) {
+  async create(createConcertDto: CreateConcertDto, img_url: string) {
     const dateDtos = createConcertDto.dates;
 
     // trnasaction
@@ -29,10 +28,10 @@ export class ConcertsRepository {
         title: createConcertDto.title,
         description: createConcertDto.description,
         location: createConcertDto.location,
-        img_url: createConcertDto.img_url,
-        is_booking_open: createConcertDto.is_booking_open,
+        img_url: img_url,
         category: createConcertDto.category,
       });
+
       const savedConcert = await this.concertsRepository.save(concert);
 
       const concertSchedule = dateDtos.map((dateDto) => {
@@ -47,7 +46,11 @@ export class ConcertsRepository {
           concert: savedConcert,
         });
       });
+
+      // Save concert and dates in the correct order
+      await this.concertsRepository.save(savedConcert);
       await this.datesRepository.save(concertSchedule);
+
       for (let i = 0; i < concertSchedule.length; i++) {
         for (let j = 0; j < createConcertDto.S; j++) {
           const seat = this.seatsRepository.create({
@@ -62,9 +65,7 @@ export class ConcertsRepository {
           const seat = this.seatsRepository.create({
             seatNumber: j + 1,
             grade: 'A',
-            dates: {
-              id: concertSchedule[i].id,
-            },
+            dates: concertSchedule[i],
             concertId: savedConcert.id,
           });
           await this.seatsRepository.save(seat);
@@ -73,9 +74,7 @@ export class ConcertsRepository {
           const seat = this.seatsRepository.create({
             seatNumber: j + 1,
             grade: 'B',
-            dates: {
-              id: concertSchedule[i].id,
-            },
+            dates: concertSchedule[i],
             concertId: savedConcert.id,
           });
           await this.seatsRepository.save(seat);
@@ -85,11 +84,80 @@ export class ConcertsRepository {
       await queryRunner.commitTransaction();
       return concertSchedule;
     } catch (error) {
+      console.log(error);
       await queryRunner.rollbackTransaction();
       throw error;
     } finally {
       await queryRunner.release();
     }
+    // const queryRunner = this.dataSource.createQueryRunner();
+    // await queryRunner.connect();
+    // await queryRunner.startTransaction();
+    // try {
+    //   const concert = this.concertsRepository.create({
+    //     title: createConcertDto.title,
+    //     description: createConcertDto.description,
+    //     location: createConcertDto.location,
+    //     img_url: img_url,
+    //     category: createConcertDto.category,
+    //   });
+    //   const savedConcert = await this.concertsRepository.save(concert);
+
+    //   const concertSchedule = dateDtos.map((dateDto) => {
+    //     return this.datesRepository.create({
+    //       date: new Date(dateDto as any),
+    //       S: createConcertDto.S,
+    //       priceS: createConcertDto.priceS,
+    //       A: createConcertDto.A,
+    //       priceA: createConcertDto.priceA,
+    //       B: createConcertDto.B,
+    //       priceB: createConcertDto.priceB,
+    //       concert: savedConcert,
+    //     });
+    //   });
+    //   await this.datesRepository.save(concertSchedule);
+    //   for (let i = 0; i < concertSchedule.length; i++) {
+    //     for (let j = 0; j < createConcertDto.S; j++) {
+    //       const seat = this.seatsRepository.create({
+    //         seatNumber: j + 1,
+    //         grade: 'S',
+    //         dates: concertSchedule[i],
+    //         concertId: savedConcert.id,
+    //       });
+    //       await this.seatsRepository.save(seat);
+    //     }
+    //     for (let j = 0; j < createConcertDto.A; j++) {
+    //       const seat = this.seatsRepository.create({
+    //         seatNumber: j + 1,
+    //         grade: 'A',
+    //         dates: {
+    //           id: concertSchedule[i].id,
+    //         },
+    //         concertId: savedConcert.id,
+    //       });
+    //       await this.seatsRepository.save(seat);
+    //     }
+    //     for (let j = 0; j < createConcertDto.B; j++) {
+    //       const seat = this.seatsRepository.create({
+    //         seatNumber: j + 1,
+    //         grade: 'B',
+    //         dates: {
+    //           id: concertSchedule[i].id,
+    //         },
+    //         concertId: savedConcert.id,
+    //       });
+    //       await this.seatsRepository.save(seat);
+    //     }
+    //   }
+
+    //   await queryRunner.commitTransaction();
+    //   return concertSchedule;
+    // } catch (error) {
+    //   console.log(error);
+    //   await queryRunner.rollbackTransaction();
+    // } finally {
+    //   await queryRunner.release();
+    // }
   }
 
   async findAll() {

@@ -6,8 +6,11 @@ import { Concert } from './entities/concert.entity';
 @Injectable()
 export class ConcertsService {
   constructor(private readonly concertsRepository: ConcertsRepository) {}
-  async create(createConcertDto: CreateConcertDto) {
-    const concert = await this.concertsRepository.create(createConcertDto);
+  async create(createConcertDto: CreateConcertDto, img_url: string) {
+    const concert = await this.concertsRepository.create(
+      createConcertDto,
+      img_url,
+    );
     return concert;
   }
 

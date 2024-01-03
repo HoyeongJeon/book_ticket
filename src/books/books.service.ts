@@ -22,6 +22,11 @@ export class BooksService {
     if (!concert) {
       throw new NotFoundException('해당 공연이 존재하지 않습니다.');
     }
+
+    if (!concert.is_booking_open) {
+      throw new NotFoundException('예약이 불가능한 공연입니다.');
+    }
+
     for (let i = 0; i < concert.dates.length; i++) {
       if (JSON.stringify(concert.dates[i].date) === JSON.stringify(date)) {
         // 자리가 없으면 예약 불가능

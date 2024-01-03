@@ -1,37 +1,30 @@
 import { OmitType } from '@nestjs/mapped-types';
 import { Concert } from '../entities/concert.entity';
 import { IsNotEmpty, IsNumber } from 'class-validator';
+import { Dates } from '../entities/dates.entity';
 
 export class CreateConcertDto extends OmitType(Concert, [
   'id',
   'createdAt',
   'updatedAt',
+  'is_booking_open',
+  'img_url',
 ] as const) {
-  @IsNumber()
-  @IsNotEmpty()
-  seats: number;
-
-  @IsNumber()
   @IsNotEmpty()
   S: number;
 
-  @IsNumber()
   @IsNotEmpty()
   priceS: number;
 
-  @IsNumber()
   @IsNotEmpty()
   B: number;
 
-  @IsNumber()
   @IsNotEmpty()
   priceB: number;
 
-  @IsNumber()
   @IsNotEmpty()
   A: number;
 
-  @IsNumber()
   @IsNotEmpty()
   priceA: number;
 }
