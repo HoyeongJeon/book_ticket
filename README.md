@@ -21,7 +21,7 @@
 ---
 
 **회원가입**
-https://github.com/HoyeongJeon/book_ticket/blob/57e961c00984261f51db9d8ae657fa13a514955b/src/users/users.controller.ts#L21C4-L24
+https://github.com/HoyeongJeon/book_ticket/blob/57e961c00984261f51db9d8ae657fa13a514955b/src/users/users.controller.ts#L21-L24
 
 
 **로그인**
