@@ -16,8 +16,9 @@
 - ORM : `typeorm`
 - DB : `mysql`
 
-## 주요 기능
 
+## 주요 기능
+(환경변수는 .env.default 참고)
 ---
 
 **회원가입**
