@@ -36,7 +36,7 @@ https://github.com/HoyeongJeon/book_ticket/blob/57e961c00984261f51db9d8ae657fa13
 **새 공연 등록(admin)**
 https://github.com/HoyeongJeon/book_ticket/blob/57e961c00984261f51db9d8ae657fa13a514955b/src/concerts/concerts.controller.ts#L30-L36
 ![image](https://github.com/HoyeongJeon/book_ticket/assets/78394999/ab550e80-ebd6-43ec-b9ea-50b0d28b9527)
-
+(S,A,B는 각 등급 별 좌석 수를 의미함)
 
 **공연 목록 보기(전체 정보)**
 https://github.com/HoyeongJeon/book_ticket/blob/57e961c00984261f51db9d8ae657fa13a514955b/src/concerts/concerts.controller.ts#L44-L47
