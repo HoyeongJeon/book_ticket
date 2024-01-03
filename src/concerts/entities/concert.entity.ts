@@ -23,12 +23,16 @@ export class Concert extends BaseModel {
 
   @IsNotEmpty()
   @IsString()
-  @Column()
+  @Column({
+    nullable: true,
+  })
   img_url: string;
 
   @IsNotEmpty()
   @IsBoolean()
-  @Column()
+  @Column({
+    default: false,
+  })
   is_booking_open: boolean;
 
   @OneToMany(() => Book, (book) => book.concert, {

@@ -6,13 +6,15 @@ import {
   Param,
   ParseIntPipe,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ConcertsService } from './concerts.service';
 import { CreateConcertDto } from './dto/concert.dto';
 import { ApiOperation } from '@nestjs/swagger';
 import { IsAdminGuard } from 'src/common/guards/isAdmin.guard';
 import { AccessTokenGuard } from 'src/auth/guard/LoggedIn.guard';
-import { ParseDatePipe } from 'src/books/pipes/date.pipe';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('concerts')
 export class ConcertsController {
@@ -26,9 +28,16 @@ export class ConcertsController {
 
   @ApiOperation({ summary: '새 공연 등록' })
   @Post()
-  @UseGuards(AccessTokenGuard)
-  async create(@Body() createConcertDto: CreateConcertDto) {
-    return await this.concertsService.create(createConcertDto);
+  @UseGuards(AccessTokenGuard, IsAdminGuard)
+  @UseInterceptors(FileInterceptor('img_url'))
+  async create(
+    @Body() createConcertDto: CreateConcertDto,
+    @UploadedFile() img_url: Express.Multer.File,
+  ) {
+    return await this.concertsService.create(
+      createConcertDto,
+      img_url?.filename,
+    );
   }
 
   @ApiOperation({ summary: '공연 목록 보기' })
