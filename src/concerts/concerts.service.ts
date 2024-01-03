@@ -45,4 +45,8 @@ export class ConcertsService {
     const updatedConcert = await this.concertsRepository.update(id, concert);
     return updatedConcert;
   }
+
+  async findOneAndTickets(id: number) {
+    return await this.concertsRepository.findOneAndTickets(id);
+  }
 }

@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Book } from './entities/book.entity';
 import { AuthModule } from 'src/auth/auth.module';
+import { Dates } from 'src/concerts/entities/dates.entity';
 
 @Module({
   exports: [BooksService],
@@ -15,7 +16,7 @@ import { AuthModule } from 'src/auth/auth.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forFeature([Book]),
+    TypeOrmModule.forFeature([Book, Dates]),
     ConcertsModule,
     forwardRef(() => UsersModule),
     AuthModule,

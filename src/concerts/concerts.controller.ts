@@ -12,6 +12,7 @@ import { CreateConcertDto } from './dto/concert.dto';
 import { ApiOperation } from '@nestjs/swagger';
 import { IsAdminGuard } from 'src/common/guards/isAdmin.guard';
 import { AccessTokenGuard } from 'src/auth/guard/LoggedIn.guard';
+import { ParseDatePipe } from 'src/books/pipes/date.pipe';
 
 @Controller('concerts')
 export class ConcertsController {
@@ -26,9 +27,7 @@ export class ConcertsController {
   @ApiOperation({ summary: '새 공연 등록' })
   @Post()
   @UseGuards(AccessTokenGuard)
-  // IsAdminGuard
   async create(@Body() createConcertDto: CreateConcertDto) {
-    console.log('hello');
     return await this.concertsService.create(createConcertDto);
   }
 
@@ -48,5 +47,11 @@ export class ConcertsController {
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return await this.concertsService.findOne(id);
+  }
+
+  @ApiOperation({ summary: '공연 예약 표 보기' })
+  @Get(':id/tickets')
+  async findOneAndTickets(@Param('id', ParseIntPipe) id: number) {
+    return await this.concertsService.findOneAndTickets(id);
   }
 }

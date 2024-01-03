@@ -10,4 +10,28 @@ export class CreateConcertDto extends OmitType(Concert, [
   @IsNumber()
   @IsNotEmpty()
   seats: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  S: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  priceS: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  B: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  priceB: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  A: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  priceA: number;
 }

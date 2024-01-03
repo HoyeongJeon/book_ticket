@@ -4,17 +4,19 @@ import { Concert } from './entities/concert.entity';
 import { CreateConcertDto } from './dto/concert.dto';
 import { Category } from './entities/category.entity';
 import { Dates } from './entities/dates.entity';
+import { Seat } from './entities/seat.entity';
 
 @Injectable()
 export class ConcertsRepository {
   private concertsRepository: Repository<Concert>;
-  private categoryRepository: Repository<Category>;
   private datesRepository: Repository<Dates>;
+  private seatsRepository: Repository<Seat>;
   constructor(private readonly dataSource: DataSource) {
     this.concertsRepository = this.dataSource.getRepository(Concert);
-    this.categoryRepository = this.dataSource.getRepository(Category);
     this.datesRepository = this.dataSource.getRepository(Dates);
+    this.seatsRepository = this.dataSource.getRepository(Seat);
   }
+
   async create(createConcertDto: CreateConcertDto) {
     const dateDtos = createConcertDto.dates;
 
@@ -26,7 +28,6 @@ export class ConcertsRepository {
       const concert = this.concertsRepository.create({
         title: createConcertDto.title,
         description: createConcertDto.description,
-        price: createConcertDto.price,
         location: createConcertDto.location,
         img_url: createConcertDto.img_url,
         is_booking_open: createConcertDto.is_booking_open,
@@ -37,11 +38,50 @@ export class ConcertsRepository {
       const concertSchedule = dateDtos.map((dateDto) => {
         return this.datesRepository.create({
           date: new Date(dateDto as any),
-          seats: createConcertDto.seats ? createConcertDto.seats : 10000,
+          S: createConcertDto.S,
+          priceS: createConcertDto.priceS,
+          A: createConcertDto.A,
+          priceA: createConcertDto.priceA,
+          B: createConcertDto.B,
+          priceB: createConcertDto.priceB,
           concert: savedConcert,
         });
       });
       await this.datesRepository.save(concertSchedule);
+      for (let i = 0; i < concertSchedule.length; i++) {
+        for (let j = 0; j < createConcertDto.S; j++) {
+          const seat = this.seatsRepository.create({
+            seatNumber: j + 1,
+            grade: 'S',
+            dates: concertSchedule[i],
+            concertId: savedConcert.id,
+          });
+          await this.seatsRepository.save(seat);
+        }
+        for (let j = 0; j < createConcertDto.A; j++) {
+          const seat = this.seatsRepository.create({
+            seatNumber: j + 1,
+            grade: 'A',
+            dates: {
+              id: concertSchedule[i].id,
+            },
+            concertId: savedConcert.id,
+          });
+          await this.seatsRepository.save(seat);
+        }
+        for (let j = 0; j < createConcertDto.B; j++) {
+          const seat = this.seatsRepository.create({
+            seatNumber: j + 1,
+            grade: 'B',
+            dates: {
+              id: concertSchedule[i].id,
+            },
+            concertId: savedConcert.id,
+          });
+          await this.seatsRepository.save(seat);
+        }
+      }
+
       await queryRunner.commitTransaction();
       return concertSchedule;
     } catch (error) {
@@ -71,10 +111,14 @@ export class ConcertsRepository {
         'concert.img_url',
         'concert.description',
         'concert.location',
-        'concert.price',
         'concert.is_booking_open',
         'dates.date',
-        'dates.seats',
+        'dates.S',
+        'dates.priceS',
+        'dates.A',
+        'dates.priceA',
+        'dates.B',
+        'dates.priceB',
       ])
       .getOne();
   }
@@ -93,5 +137,15 @@ export class ConcertsRepository {
 
   async update(id: number, concert: Concert) {
     return await this.concertsRepository.update(id, concert);
+  }
+
+  async findOneAndTickets(id: number) {
+    const tickets = await this.seatsRepository.find({
+      where: {
+        concertId: id,
+      },
+      select: ['seatNumber', 'grade', 'isBooked'],
+    });
+    return tickets;
   }
 }
