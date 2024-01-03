@@ -1,0 +1,2 @@
+export const SECRET_KEY = 'SECRET_KEY';
+export const PASSWORD_HASH_ROUND = 'PASSWORD_HASH_ROUND';

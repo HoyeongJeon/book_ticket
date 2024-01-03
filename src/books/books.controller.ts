@@ -45,12 +45,3 @@ export class BooksController {
     return this.booksService.delete(bookingId, user.id);
   }
 }
-
-/**
- * 예약을 할 때 필요한 정보
- * 1. 공연 id
- * 2. 공연 날짜와 시간
- * 3. 공연 id와 해당하는 날짜를 보내서 해당 공연에 자리가 남아있는지 확인.
- * 3. 가격
- * 4. 내 돈
- */

@@ -4,13 +4,18 @@ import { UsersRepository } from 'src/users/users.repository';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/entities/user.entity';
-import { PASSWORD_HASH_ROUND } from 'src/users/const/bcrypt.const';
+import { ConfigService } from '@nestjs/config';
+import {
+  SECRET_KEY,
+  PASSWORD_HASH_ROUND,
+} from 'src/common/const/env-keys.const';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly usersRepository: UsersRepository,
+    private readonly configService: ConfigService,
   ) {}
 
   // header에서 토큰 받기
@@ -27,14 +32,14 @@ export class AuthService {
   // 토큰 검증
   async verifyToken(token: string) {
     return await this.jwtService.verify(token, {
-      secret: process.env.SECRET_KEY,
+      secret: this.configService.get<string>(SECRET_KEY),
     });
   }
 
   // 토큰 재발급
   rotateToken(token: string, isRefreshToken: boolean) {
     const payload = this.jwtService.verify(token, {
-      secret: process.env.SECRET_KEY,
+      secret: this.configService.get<string>(SECRET_KEY),
     });
 
     if (payload.type !== 'refresh') {
@@ -59,7 +64,7 @@ export class AuthService {
     };
 
     return this.jwtService.sign(payload, {
-      secret: process.env.SECRET_KEY,
+      secret: this.configService.get<string>(SECRET_KEY),
       expiresIn: isRefreshToken ? 3600 : 600,
     });
   }
@@ -100,7 +105,7 @@ export class AuthService {
     }
     const hashedPassword = await bcrypt.hash(
       signUpUserDto.password,
-      PASSWORD_HASH_ROUND,
+      parseInt(this.configService.get<string>(PASSWORD_HASH_ROUND)),
     );
     const userObj = { ...signUpUserDto, password: hashedPassword };
     const user = await this.usersRepository.signup(userObj);
