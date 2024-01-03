@@ -27,7 +27,6 @@ export class ConcertsController {
   @ApiOperation({ summary: '새 공연 등록' })
   @Post()
   @UseGuards(AccessTokenGuard)
-  // IsAdminGuard
   async create(@Body() createConcertDto: CreateConcertDto) {
     return await this.concertsService.create(createConcertDto);
   }

@@ -1,8 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UseGuards } from '@nestjs/common';
 import { BooksRepository } from './books.repository';
 import { ConcertsService } from 'src/concerts/concerts.service';
+import { AccessTokenGuard } from 'src/auth/guard/LoggedIn.guard';
 
 @Injectable()
+@UseGuards(AccessTokenGuard)
 export class BooksService {
   constructor(
     private readonly concertsService: ConcertsService,
@@ -33,7 +35,6 @@ export class BooksService {
           return '해당 등급의 예약 가능한 자리가 없습니다.';
         }
 
-        // const price = concert.dates[i][grade].price;
         const price = concert.dates[i][`price${grade}`];
 
         // 가격이랑 내가 갖고있는 돈 비교
@@ -56,5 +57,24 @@ export class BooksService {
   async myBooks(userId: number) {
     const myBooks = await this.booksRepository.myBooks(userId);
     return myBooks;
+  }
+
+  async delete(bookingId: number, userId: number) {
+    const book = await this.booksRepository.findOne(bookingId);
+
+    if (!book) {
+      throw new NotFoundException('해당 예약이 존재하지 않습니다.');
+    }
+
+    const timeDiff =
+      (book.date.getTime() - new Date().getTime()) / (60 * 60 * 1000);
+
+    if (timeDiff < 3) {
+      throw new NotFoundException('취소가능 시간이 지났습니다.');
+    }
+
+    // const grade = book.grade;
+
+    return await this.booksRepository.delete(bookingId, userId);
   }
 }

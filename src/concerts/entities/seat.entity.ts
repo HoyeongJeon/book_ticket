@@ -1,7 +1,8 @@
 import { BaseModel } from 'src/common/entities/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Dates } from './dates.entity';
 import { ApiOperation } from '@nestjs/swagger';
+import { Book } from 'src/books/entities/book.entity';
 
 @Entity()
 export class Seat extends BaseModel {
@@ -27,4 +28,7 @@ export class Seat extends BaseModel {
   // 어떤 공연인지
   @Column()
   concertId: number;
+
+  @OneToOne(() => Book, (book) => book.Seat)
+  Book: Book;
 }

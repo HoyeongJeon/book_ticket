@@ -49,7 +49,6 @@ export class ConcertsRepository {
       });
       await this.datesRepository.save(concertSchedule);
       for (let i = 0; i < concertSchedule.length; i++) {
-        console.log(concertSchedule[i]);
         for (let j = 0; j < createConcertDto.S; j++) {
           const seat = this.seatsRepository.create({
             seatNumber: j + 1,
@@ -57,7 +56,6 @@ export class ConcertsRepository {
             dates: concertSchedule[i],
             concertId: savedConcert.id,
           });
-          console.log(seat);
           await this.seatsRepository.save(seat);
         }
         for (let j = 0; j < createConcertDto.A; j++) {
