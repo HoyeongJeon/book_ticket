@@ -1,6 +1,6 @@
 import { Controller, Headers, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AccessTokenGuard, RefreshTokenGuard } from './guard/LoggedIn.guard';
+import { RefreshTokenGuard } from './guard/LoggedIn.guard';
 import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('auth')

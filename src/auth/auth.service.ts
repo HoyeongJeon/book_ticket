@@ -86,6 +86,7 @@ export class AuthService {
 
     const isMatch = await bcrypt.compare(user.password, existingUser.password);
     if (!isMatch) {
+      console.log('비밀번호 불일치');
       throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
     }
     return existingUser;
